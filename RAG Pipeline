@@ -1,0 +1,159 @@
+from sentence_transformers import sentenceTransformer
+import faiss
+import numpy as np
+from pypdf import PdfReader
+#Documents
+documents = [
+    {
+        "text": """
+        UPI transactions are subject to transaction limits
+        defined by the bank and applicable regulatory guidelines.
+        """,
+        "source": "UPI Policy"
+    },
+
+    {
+        "text": """
+        IMPS is available 24 hours. Transaction limits depend
+        on the applicable bank policy and customer category.
+        """,
+        "source": "IMPS Policy"
+    },
+
+    {
+        "text": """
+        Customers must complete applicable KYC requirements
+        before accessing certain banking services.
+        """,
+        "source": "KYC Policy"
+    }
+]
+# Embedding Model
+
+model = sentenceTransformer(
+"all-MiniLM-L6-V2"
+  text = [chunk["Text"] for chunk in all_chunks]
+)
+
+#Create Embeddings
+
+texts = [
+    doc["text"]
+    for doc in documents
+]
+
+embeddings = model.encode(texts)
+
+embeddings = np.array(
+    embeddings
+).astype("float32")
+
+#Create index
+
+index = faiss.IndexFlatL2(
+    embeddings.shape[1]
+)
+
+index.add(embeddings)
+
+#User query
+
+query = (
+    "What determines my UPI transaction limit?"
+)
+
+#Query Retrieval
+query_embedding = model.encode(
+    [query]
+).astype("float32")
+
+#Retrieval
+
+distances, indices = index.search(
+    query_embedding,
+    k=2
+)
+# Build Context
+
+retrieved_docs = [
+    documents[idx]
+    for idx in indices[0]
+]
+
+context = "\n\n".join(
+    doc["text"]
+    for doc in retrieved_docs
+)
+#Prompt
+
+prompt = f"""
+You are a banking policy assistant.
+
+Use ONLY the following context.
+
+Context:
+{context}
+
+Question:
+{query}
+
+Answer:
+"""
+
+print(prompt)
+
+response = llm.generate(
+    prompt,
+    temperature=0.1,
+    max_output_tokens=300
+)
+def clean_text(text):
+    text = text.replace("\n", " ")
+    text = " ".join(text.split())
+    return text
+
+
+def create_chunks(text, chunk_size=500, overlap=50):
+
+    chunks = []
+
+    start = 0
+
+    while start < len(text):
+
+        end = start + chunk_size
+
+        chunks.append(text[start:end])
+
+        start += chunk_size - overlap
+
+    return chunks
+
+
+reader = PdfReader("UPI_Policy.pdf")
+
+all_chunks = []
+
+for page_number, page in enumerate(reader.pages, start=1):
+
+    text = page.extract_text()
+
+    if not text:
+        continue
+
+    text = clean_text(text)
+
+    chunks = create_chunks(text)
+
+    for chunk in chunks:
+
+        all_chunks.append({
+            "text": chunk,
+            "source": "UPI_Policy.pdf",
+            "page": page_number,
+            "product": "UPI",
+            "policy_version": "2026"
+        })
+
+
+print("Total chunks:", len(all_chunks))
