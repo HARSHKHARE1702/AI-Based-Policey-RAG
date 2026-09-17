@@ -157,3 +157,23 @@ for page_number, page in enumerate(reader.pages, start=1):
 
 
 print("Total chunks:", len(all_chunks))
+//hybrid Retrieval
+
+def answer_question(query):
+candidates = retrieve(query)
+
+if not candidate:
+ return "Insufficient approved Information"
+
+if not retrieval_is_relevent(candidate)
+return "Insufficient approved information"
+
+candidates = rerank(query,candidates)-----Reranking
+context = build_context(candidate[:5])
+prompt = build_prompt(comtext,query)
+
+return llm.generate(
+prompt,
+temperature=0.1
+max_output_token=100
+)
