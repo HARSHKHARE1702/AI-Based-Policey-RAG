@@ -1,0 +1,7 @@
+def generate_answer(prompt):
+response = llm.generate(
+prompt,
+temperature = 0.1,
+max_output_token =300,
+)
+return response
