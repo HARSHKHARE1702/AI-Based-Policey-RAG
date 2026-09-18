@@ -1,0 +1,21 @@
+from qdrant_client import QdrantClient
+from langchain_qdrant import QdrantVectorStore
+
+vector_store = QdrantVectorStore(
+client=client,
+collection_name = "documents"
+embeddings-embeddings
+)
+
+retreiver = vector_store.as_retriever(
+search_kwaargs
+)
+
+client = QdrantClient(:"Memory")
+client.create_collection{
+collection_name="documents"
+vectors_config={
+"size":300
+distance:"cosine"
+}
+
