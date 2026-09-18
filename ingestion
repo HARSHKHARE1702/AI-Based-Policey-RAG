@@ -43,3 +43,11 @@ def create_chunks(
     return chunks
 
     return documents
+
+all_chunks.append({
+    "text": chunk,
+    "source": "UPI_Policy.pdf",
+    "page": 14,
+    "product": "UPI",
+    "policy_version": "2026"
+})
