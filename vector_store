@@ -1,0 +1,21 @@
+import faiss
+import numpy as np
+
+def create_index(embeddings):
+embeddings = np.array(
+embeddings
+).astype("float32")
+
+faiss.normalize_L2(
+embeddings
+)
+
+dimensions = embeddings.shape[1]
+index = faiss.IndexFlatIp(
+dimension
+)
+index.add(embedding)
+return index
+
+
+
