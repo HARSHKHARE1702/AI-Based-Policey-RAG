@@ -1,0 +1,57 @@
+from mcp.server import MCPServer
+mcp = mcpServer("Banking Assistant")
+
+@mcp.tool()
+def get_account_balance(account_id:str)->dict:
+""Get the current account details""
+
+return{
+"account id":account_id
+"balance":75000
+"Currency":INR
+}
+if _name_=="__main__":
+@mcp.tool()
+def calculate_emi(
+    principal: float,
+    annual_rate: float,
+    months: int
+) -> float:
+
+    monthly_rate = annual_rate / 12 / 100
+
+    emi = (
+        principal
+        * monthly_rate
+        * (1 + monthly_rate) ** months
+        /
+        ((1 + monthly_rate) ** months - 1)
+    )
+
+    return round(emi, 2)
+
+
+@mcp.resource("bank://policies/upi")
+def upi_policy() -> str:
+
+    return """
+    UPI policy information.
+    Use the bank's reconciliation process
+    for failed transactions.
+    """
+
+
+@mcp.prompt()
+def transaction_analysis(transaction: str) -> str:
+
+    return f"""
+    Analyze this transaction:
+
+    {transaction}
+
+    Provide a structured investigation summary.
+    """
+
+
+if __name__ == "__main__":
+    mcp.run()
