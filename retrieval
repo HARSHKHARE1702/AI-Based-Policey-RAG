@@ -42,3 +42,19 @@ def retrieve(
         })
 
     return results
+def build_context(results):
+
+    context = []
+
+    for result in results:
+
+        context.append(
+            f"""
+Source: {result['source']}
+Page: {result['page']}
+
+{result['text']}
+"""
+        )
+
+    return "\n\n".join(context)
