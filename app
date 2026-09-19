@@ -3,6 +3,7 @@ from retrieval import retrieve
 from prompt import build_prompt
 from vector_store import index
 from ingestion import chunks
+from fastApi import FastAPI
 
 def answer_question(question):
 results = retrieve{
@@ -35,3 +36,14 @@ answer = answer_question(
 )
 
 print(answer)
+
+app = FastApi()
+@app.get("/")
+def home():
+return{
+message:"Banking AI assistant API"
+}
+@app.get("/customer/{customer_ID}")
+def get_customer(customer_ID:str):
+
+
