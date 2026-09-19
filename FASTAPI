@@ -1,0 +1,18 @@
+from fastApi import Fastapi
+app = FastApi()
+@app.post("/chat")
+def chat(question:str):
+#1. Retrieve documents
+#2. Query graph if Required
+#3. Call LLM
+#4. Return Grounded Answer
+
+return{
+"answer":".."
+}
+#POST/chat
+#POST/search-policey
+#GET/customer/{id}
+#GET/account/{id}
+#POST/check-upi-limit
+#POST/create-Ticket
