@@ -1,0 +1,61 @@
+from graph.graph_queries import get_customer_context
+
+
+def graph_retrieve(
+    driver,
+    customer_id
+):
+
+    data = get_customer_context(
+        driver,
+        customer_id
+    )
+
+    return data
+
+
+def build_graph_context(data):
+
+    if not data:
+        return "No authorized customer context available."
+
+    return f"""
+Customer ID:
+{data["customer_id"]}
+
+Accounts:
+{data["accounts"]}
+
+KYC Status:
+{data["kyc_status"]}
+
+Available Services:
+{data["services"]}
+"""
+
+def hybrid_retrieve(
+    question,
+    customer_id,
+    vector_model,
+    vector_index,
+    chunks,
+    neo4j_driver
+):
+
+    vector_results = retrieve(
+        question,
+        vector_model,
+        vector_index,
+        chunks,
+        top_k=5
+    )
+
+    graph_data = graph_retrieve(
+        neo4j_driver,
+        customer_id
+    )
+
+    return {
+        "policy_results": vector_results,
+        "customer_context": graph_data
+    }
