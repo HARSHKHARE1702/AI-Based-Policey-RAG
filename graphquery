@@ -1,0 +1,23 @@
+def get_customer_accounts(driver, customer_id):
+
+    query = """
+    MATCH (c:Customer {
+        customer_id: $customer_id
+    })
+    -[:HAS_ACCOUNT]->
+    (a:Account)
+
+    RETURN
+        a.account_id AS account_id,
+        a.type AS type,
+        a.status AS status
+    """
+
+    with driver.session() as session:
+
+        result = session.run(
+            query,
+            customer_id=customer_id
+        )
+
+        return [record.data() for record in result]
